@@ -61,19 +61,22 @@ namespace EmployeeCRUD.Controllers
         public async Task<IActionResult> UpdateEmployee([FromRoute] Guid Id, EmployeeDTO employeeUpdateDto)
         {
             var FoundEmployee = await dbContext.Employees.FindAsync(Id);
-            if (FoundEmployee.Firstname == employeeUpdateDto.Firstname && FoundEmployee.Lastname == employeeUpdateDto.Lastname && FoundEmployee.Email == employeeUpdateDto.Email)
+            if (FoundEmployee != null)
             {
-                return Ok("The combination of first name, last name and email address should be unique.");
-            }
-            else if (FoundEmployee != null)
-            {
-                FoundEmployee.Firstname = employeeUpdateDto.Firstname;
-                FoundEmployee.Lastname = employeeUpdateDto.Lastname;
-                FoundEmployee.Email = employeeUpdateDto.Email;
-                FoundEmployee.Age = employeeUpdateDto.Age;
-                dbContext.Employees.Update(FoundEmployee);
-                await dbContext.SaveChangesAsync();
-                return Ok(employeeUpdateDto);
+                if (FoundEmployee.Firstname == employeeUpdateDto.Firstname && FoundEmployee.Lastname == employeeUpdateDto.Lastname && FoundEmployee.Email == employeeUpdateDto.Email)
+                {
+                    return Ok("The combination of first name, last name and email address should be unique.");
+                }
+                else if (FoundEmployee != null)
+                {
+                    FoundEmployee.Firstname = employeeUpdateDto.Firstname;
+                    FoundEmployee.Lastname = employeeUpdateDto.Lastname;
+                    FoundEmployee.Email = employeeUpdateDto.Email;
+                    FoundEmployee.Age = employeeUpdateDto.Age;
+                    dbContext.Employees.Update(FoundEmployee);
+                    await dbContext.SaveChangesAsync();
+                    return Ok(employeeUpdateDto);
+                }
             }
             return NotFound();
         }   //UpdateEmployee
